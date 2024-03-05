@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-200">
+    <div id="app">
+      <div class="h-screen grid grid-cols-1 justify-items-center mt-10">
+      <div class="container">
+        <h1 class="font-bold font-mono text-4xl text-center">To Do List App</h1>
+
+        <div class="grid grid-cols-12 gap-4">
+          <div class="col-span-12 sm:col-span-6 md:col-span-6 lg:col-span-2 p-5">
+            <input
+              type="time"
+              name="start"
+              id="start"
+              class="bg-gray-50 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              placeholder="start"
+              v-model="newItem.start"
+            />
+          </div>
+          <div class="col-span-12 sm:col-span-6 md:col-span-6 lg:col-span-2 p-5">
+            <input
+              type="time"
+              name="end"
+              id="end"
+              class="bg-gray-50 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              placeholder="end"
+              v-model="newItem.end"
+            />
+          </div>
+          <div class="col-span-12 sm:col-span-12 md:col-span-6 lg:col-span-6 p-5">
+            <input
+              type="text"
+              name="schedule"
+              id="schedule"
+              class="bg-gray-50 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              placeholder="schedule"
+              v-model="newItem.schedule"
+            />
+          </div>
+          <div class="col-span-12 sm:col-span-12 md:col-span-6 lg:col-span-2 p-5">
+            <input
+                    type="submit"
+                    class="w-full text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                value="Add" @click="add">
+                </input>
+          </div>
+        </div>
+
+        <div class="container">
+            <div class="" v-if="items == ''">
+              <p class="text-center font-bold text-2xl">Nothing todo</p>
+            </div>
+            <div class="" v-else>
+              <div class="grid grid-cols-12 gap-4 justify-around" v-for="(item, index) in items">
+                <div class=""></div>
+                  <div class="pt-5 pb-0 px-5 col-span-6 sm:col-span-6 md:col-span-6 lg:col-span-2">
+                    <button class="w-full text-white bg-red-600 hover:bg-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                        @click="deleteItem(index)">Delete
+                    </button>
+                </div>
+                <div class="pt-5 pb-0 px-5 col-span-6 sm:col-span-6 md:col-span-6 lg:col-span-2">
+                    <button class="w-full text-white bg-green-600 hover:bg-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                        @click="doneItem(index)">Done
+                    </button>
+                </div>
+                <div class="pt-6 pb-0 px-5 font-bold text-lg col-span-12 sm:col-span-12 md:col-span-6 lg:col-span-6">
+                    <p :class="{'line-through text-red-500' : coret[index]}">{{ item.start }} - {{ item.end }} | {{ item.schedule }}</p>
+                </div>
+                <div class=""></div>
+                <div class="grid grid-cols-subgrid col-span-10">
+                    <div class="col-start-1 col-span-12"><hr class="border-b border-black my-4"></div>
+                </div>
+            </div>
+            </div>
+        </div>
+      </div>
+    </div>
+    </div>
+
+    <script type="module">
+      import { createApp } from "https://unpkg.com/vue@3/dist/vue.esm-browser.js";
+
+      createApp({
+        data(){
+          return{
+            items: [
+              {
+                start: "11:00",
+                end: "12:00",
+                schedule:"asd"
+              }
+            ],
+            newItem:{
+              start:"",
+              end:"",
+              schedule:""
+            },
+            coret: [],
+            
+          };
+        },
+        methods:{
+          add(){
+            if (this.newItem.start.trim() != '' && this.newItem.end.trim() !='' && this.newItem.schedule.trim() != ''){
+              this.items.push({
+                start: this.newItem.start,
+                end: this.newItem.end,
+                schedule: this.newItem.schedule,
+              });
+              this.newItem={
+                start: '',
+                end:'',
+                schedule:''
+              };
+
+              this.coret.push(false);
+            }
+          },
+
+          deleteItem(index){
+            this.items.splice(index, 1);
+            this.coret.splice(index, 1);
+          },
+
+          doneItem(index){
+            this.coret[index] = !this.coret[index];
+          }
+        },
+        computed:{
+          todo(){
+            return this.items.start+' - '+this.items.end+' = '+this.items.schedule;
+          }
+        }
+      }).mount('#app')
+    </script>
+  </body>
+</html>
